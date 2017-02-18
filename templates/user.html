@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block page_content%}
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="/u/{{ user.id }}">学生信息</a></li>
+  <li role="presentation"><a href="/u/{{ user.id }}/add">新增</a></li>
+  <li role="presentation"><a href="/u/{{ user.id }}/search">查找</a></li>
+</ul>
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<th>学生学号</th>
+		<th>学生姓名</th>
+		<th>专业班级</th>
+		<th>所在寝室</th>
+		<th>联系方式</th>
+		<th>操作</th>
+	</thead>
+	
+	<tbody>
+	{% for student in user.students %}
+		<tr>
+			<td class="data">{{ student.stu_id }}</td>
+			<td class="data">{{ student.name }}</td>
+			<td class="data">{{ student.cls }}</td>
+			<td class="data">{{ student.addr }}</td>
+			<td class="data">{{ student.phone }}</td>
+			<td class="hide">{{ student.id }}</td>
+			<td class="delete">删除</td>
+		</tr>
+	{% endfor %}
+	</tbody>	
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+	$(".delete").click(function() {
+			$.post('/u/{{ user.id }}/delete', {stu_id: $(this).siblings().first().text()}, function(data) {}, 'json');
+			$(this).parent('tr').remove();
+	}).hover(function() {
+		$(this).css('background-color', 'red');
+	}, function() {
+		$(this).css('background-color', 'white');
+	});
+	var close = function() {
+		var $not_close = $('.edit');
+		if ($not_close) {
+			$old_input = $not_close.children().first();
+			$not_close.text($old_input.val());
+			$old_input.remove();
+			$not_close.attr('class', 'data');
+		};
+	};
+	
+	var edit = function() {
+		if ($(this).children().length === 0) {
+			var data = $(this).text();
+			var $input = $('<input type="text"/>');
+			$(this).text('');
+			$input.val(data);
+			$(this).append($input);
+			close();
+			$(this).attr('class', 'edit');
+		}	
+	};
+	$(".data").click(edit).hover(function() {
+		$(this).css('background-color', 'lightblue');
+	}, function() {
+		$(this).css('background-color', 'white');
+	});
+	
+	$(".data").click(function() {
+		var $delete = $(this).siblings().last();
+		$delete.attr('class', 'save');
+		$delete.text('保存');
+		$delete.unbind('click');
+		$delete.click(function(e) {
+			close();
+			var stu = $(this).siblings();
+			$.post(
+				'/u/{{ user.id }}/change', 
+				{
+					stu_id: $(stu[0]).text(), 
+					name: $(stu[1]).text(), 
+					cls: $(stu[2]).text(), 
+					addr: $(stu[3]).text(),
+					phone: $(stu[4]).text(),
+					id: $(stu[5]).text()
+				}, 
+				function(data) {},
+				'json'
+			);
+			$(this).unbind('click');
+			$(this).text('删除').click(function() {
+				$.post('/u/{{ user.id }}/delete', {stu_id: $(this).siblings().first().text()}, 
+					function(data) {}, 'json');
+				$(this).parent('tr').remove();
+			}).hover(function() {
+				$(this).css('background-color', 'red');
+			}, function() {
+				$(this).css('background-color', 'white');
+			});
+		}).hover(function() {
+			$(this).css('background-color', 'lightgreen');
+		}, function() {
+			$(this).css('background-color', 'white');
+		});	
+	});
+});	
+</script>
+{% endblock %}

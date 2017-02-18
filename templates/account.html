@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<table class="table table-bordered table-hover">
+	<thead>
+		<th>键</th>
+		<th>值</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>账户邮箱</td>
+			<td>{{ user.email }}</td>
+		</tr>
+		<tr>
+			<td>账户身份</td>
+			<td>{{ user.role }}</td>
+		</tr>
+		{% if user.role == '教师' %}
+		<tr>
+			<td>学生数目</td>
+			<td>{{ num }}</td>
+		</tr>
+		{%endif%}
+		<tr>
+			<td>账户编号</td>
+			<td>{{ user.id }}</td>
+		</tr>
+		<tr>
+			<td>账户口令</td>
+			<td>{{ user.active_code }}</td>
+		</tr>
+		<tr>
+			<td>通过验证</td>
+			<td>{{ user.active_state }}</td>
+		</tr>
+	</tbody>	
+</table>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+{% if user %}
+<ul class="nav nav-tabs">
+	{% if search %}
+	<li role="presentation" class="active"><a href="/u/{{ user.id }}/search">查找</a></li>
+	<li role="presentation"><a href="/u/{{ user.id }}/add">新增</a></li> 	
+	{% else %}
+	<li role="presentation" class="active"><a href="/u/{{ user.id }}/add">新增</a></li> 
+  	<li role="presentation"><a href="/u/{{ user.id }}/search">查找</a></li>
+  	{% endif %}
+  	<li role="presentation"><a href="/u/{{ user.id }}">学生信息</a></li>
+</ul>
+{% endif %}
+{{ wtf.quick_form(form) }}
+
+{% if search %}
+<p>
+	
+</p>
+<table class="table table-bordered table-striped">
+	<thead>
+		<th>学生学号</th>
+		<th>学生姓名</th>
+		<th>专业班级</th>
+		<th>所在寝室</th>
+		<th>联系方式</th>
+		<th>操作</th>
+	</thead>
+	
+	<tbody>
+	{% for student in user.students %}
+	{% if student not in hide %}
+		<tr>
+			<td>{{ student.stu_id }}</td>
+			<td>{{ student.name }}</td>
+			<td>{{ student.cls }}</td>
+			<td>{{ student.addr }}</td>
+			<td>{{ student.phone }}</td>
+			<td><input type="checkbox" class="checkbox"></td>
+		</tr>
+	{% endif %}
+	{% endfor %}
+	</tbody>	
+</table>
+{% endif %}
+{% endblock %}

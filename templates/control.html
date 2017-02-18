@@ -1,0 +1,111 @@
+{% extends 'bootstrap/base.html' %}
+{% block title %}Flasky{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+			</button>
+			<a href="/" class="navbar-brand">Flasky</a>
+		</div>
+		<div class="navbar-collapse collapse">				
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/admin/add">新增用户</a></li>
+		        <li><a href="/logout">退出</a></li>
+		    </ul>
+		    <ul class="nav navbar-nav">
+				<li><a href="/">首页</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-warning">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			{{ message }}
+		</div>
+	{% endfor %}
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<th>id</th>
+			<th>name</th>
+			<th>email</th>
+			<th>role</th>
+			<th>active_code</th>
+			<th>active_state</th>
+			<th>students_num</th>
+			<th>frozen</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			{% for user in users %}
+			<tr>
+				<td>{{ user.id }}</td>
+				<td>{{ user.name }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.role }}</td>
+				<td>{{ user.active_code }}</td>
+				<td>{{ user.active_state }}</td>
+				<td>{{ user.students.count() }}</td>
+				<td>{% if user.frozen %}已冻结{% else %}未冻结{% endif %}</td>
+				<td>
+					<button class="delete">删除</button>
+					<button class="frozen">{% if user.frozen %}解冻{% else %}冻结{% endif %}</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+
+	$.prototype["myToggle"] = function () {
+	    var args = arguments;
+	    var i = 0;
+	    var n = args.length;
+
+	    this.click(function () {
+	        var func = args[i%n];
+	        if (Object.prototype.toString.call(func) ==='[object Function]') {
+	            func();     
+	        }
+	        i += 1;
+
+	        return false;
+	    });
+	};
+
+	$('.delete').click(function() {
+		$.post('/admin/delete', {id: $(this).parent().siblings().first().text()});
+		$(this).parent().parent().remove();
+	});
+
+
+	$('.frozen').click(function() {
+		if ($($(this).parent().siblings()[7]).text() === '未冻结') {
+			$.post('/admin/frozen', {id: $(this).parent().siblings().first().text()});
+			$(this).text('解冻');
+			$($(this).parent().siblings()[7]).text('已冻结');
+		} else {
+			$.post('/admin/normal', {id: $(this).parent().siblings().first().text()});
+			$(this).text('冻结');
+			$($(this).parent().siblings()[7]).text('未冻结');
+		}
+	});
+});
+</script>
+{% endblock %}

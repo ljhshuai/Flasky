@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block page_content%}
+<h1>选择教师查看信息</h1>
+{% if not teachers %}
+<h3>暂无教师信息</h3>
+{% else %}
+	<table class="table table-bordered table-hover">
+		<thead>
+			<th>教师姓名</th>
+			<th>学生人数</th>
+			<th>联系邮箱</th>
+		</thead>
+		
+		<tbody>
+		{% for teacher in teachers %}			
+			<tr class="teacher">
+				<td>{{ teacher.name }}</td>
+				<td>{{ teacher.students.count() }}</td>
+				<td>{{ teacher.email }}</td>
+				<td class="hide">{{ teacher.id }}</td>
+				<td><a class='hide' href="/s/{{ user.id }}/{{ teacher.id }}"></a></td>
+			</tr>
+			
+		{% endfor %}
+		</tbody>	
+	</table>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function() {
+	$('.teacher').hover(function() {
+		$(this).css('background-color', 'lightgreen');
+	}, function() {
+		$(this).css('background-color', 'white');
+	}).click(function() {
+		$(this).children().last().children()[0].click();
+	});
+});
+</script>
+{% endblock %}

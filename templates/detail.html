@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block page_content%}
+<h2>教师姓名 {{user.name}}</h2>
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<th>学生学号</th>
+		<th>学生姓名</th>
+		<th>专业班级</th>
+		<th>所在寝室</th>
+		<th>联系方式</th>
+	</thead>
+	
+	<tbody>
+	{% for student in user.students %}
+		<tr>
+			<td>{{ student.stu_id }}</td>
+			<td>{{ student.name }}</td>
+			<td>{{ student.cls }}</td>
+			<td>{{ student.addr }}</td>
+			<td>{{ student.phone }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>	
+</table>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+{% if code == '404' %}
+<h1>该页面不存在</h1>
+{% elif code == '400' %}
+<h1>禁止访问</h1>
+{% elif code == '500' %}
+<h1>服务器错误</h1>
+{% else %}
+<h1>未知错误</h1>
+{% endif %}
+{% endblock %}
