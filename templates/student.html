@@ -19,7 +19,7 @@
 				<td>{{ teacher.students.count() }}</td>
 				<td>{{ teacher.email }}</td>
 				<td class="hide">{{ teacher.id }}</td>
-				<td><a class='hide' href="/s/{{ user.id }}/{{ teacher.id }}"></a></td>
+				<td class='hide'><a href="/s/{{ user.id }}/{{ teacher.id }}"></a></td>
 			</tr>
 			
 		{% endfor %}
