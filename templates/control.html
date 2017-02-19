@@ -34,7 +34,8 @@
 			{{ message }}
 		</div>
 	{% endfor %}
-	<table class="table table-bordered table-hover table-striped">
+	<div class="table-responsive">
+	<table class="table table-bordered table-hover table-striped table-condensed">
 		<thead>
 			<th>id</th>
 			<th>name</th>
@@ -66,34 +67,17 @@
 		</tbody>
 	</table>
 	</div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script>
 $(document).ready(function() {
-
-	$.prototype["myToggle"] = function () {
-	    var args = arguments;
-	    var i = 0;
-	    var n = args.length;
-
-	    this.click(function () {
-	        var func = args[i%n];
-	        if (Object.prototype.toString.call(func) ==='[object Function]') {
-	            func();     
-	        }
-	        i += 1;
-
-	        return false;
-	    });
-	};
-
 	$('.delete').click(function() {
 		$.post('/admin/delete', {id: $(this).parent().siblings().first().text()});
 		$(this).parent().parent().remove();
 	});
-
 
 	$('.frozen').click(function() {
 		if ($($(this).parent().siblings()[7]).text() === '未冻结') {

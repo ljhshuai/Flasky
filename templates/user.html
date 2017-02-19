@@ -6,7 +6,11 @@
   <li role="presentation"><a href="/u/{{ user.id }}/add">新增</a></li>
   <li role="presentation"><a href="/u/{{ user.id }}/search">查找</a></li>
 </ul>
-<table class="table table-bordered table-striped table-hover">
+<p>
+	
+</p>
+<div class="table-responsive">
+<table class="table table-bordered table-striped table-hover table-condensed">
 	<thead>
 		<th>学生学号</th>
 		<th>学生姓名</th>
@@ -30,6 +34,7 @@
 	{% endfor %}
 	</tbody>	
 </table>
+</div>
 {% endblock %}
 
 {% block scripts %}

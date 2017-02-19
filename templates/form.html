@@ -13,6 +13,9 @@
   	{% endif %}
   	<li role="presentation"><a href="/u/{{ user.id }}">学生信息</a></li>
 </ul>
+<p>
+	
+</p>
 {% endif %}
 {{ wtf.quick_form(form) }}
 
@@ -27,7 +30,6 @@
 		<th>专业班级</th>
 		<th>所在寝室</th>
 		<th>联系方式</th>
-		<th>操作</th>
 	</thead>
 	
 	<tbody>
@@ -39,7 +41,6 @@
 			<td>{{ student.cls }}</td>
 			<td>{{ student.addr }}</td>
 			<td>{{ student.phone }}</td>
-			<td><input type="checkbox" class="checkbox"></td>
 		</tr>
 	{% endif %}
 	{% endfor %}
