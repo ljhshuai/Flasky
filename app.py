@@ -589,7 +589,7 @@ def feedbakc():
 	message = request.form['message']
 	email = request.form['account']
 	sub = "反馈信息来自:" + email
-	send_mail('hust1446@gmail.com', sub, message)
+	send_mail('huster1446@gmail.com', sub, message)
 	return 'ok'
 
 
