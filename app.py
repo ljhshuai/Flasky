@@ -2,7 +2,7 @@
 #导入所需模块
 import os
 import random
-from flask import Flask, render_template, redirect, url_for, flash, abort, session, request, jsonify
+from flask import Flask, render_template, redirect, url_for, flash, abort, session, request, jsonify, send_from_directory
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, ValidationError, RadioField
 from wtforms.validators import Email, DataRequired, Length, EqualTo
@@ -115,7 +115,7 @@ class SignupForm(FlaskForm):
 		Length(6, message='这么短?'), password_noblank])		
 	confirm = PasswordField("确认密码", validators=[DataRequired(message='确认一下是好的'),
 		EqualTo('password', "两次密码不一样!")])
-	role = RadioField('身份', choices=[('学生', '学生'), ('教师', '教师')], default='学生')
+	role = RadioField('身份', choices=[('学生', '学生'), ('教师', '教师')], default='教师')
 	signup = SubmitField("注册")
 
 #找回密码表单模型
@@ -510,6 +510,94 @@ def internal_server_error(e):
 @app.errorhandler(400)
 def bad_request(e):
 	return render_template('error.html', code='400'), 500
+
+#android登录路由控制
+@app.route('/android/login', methods=['POST'])
+def android_login():
+	#根据账号邮箱找到用户
+	email = request.form['account']
+	password = request.form['password']
+	user = User.query.filter_by(email=email).first()
+	#比较密码和注册状态
+	if user is not None and user.password == password and user.active_state == True:
+		return 'ok'
+	return 'error'
+
+#初始化Android本地数据库
+@app.route('/android/init', methods=['POST'])
+def return_students():
+	email = request.form['account']
+	user = User.query.filter_by(email=email).first()
+	if user and user.students.count() != 0:
+		students = []
+		for student in user.students:
+			students.append(student.name + ' ' + student.stu_id + ' ' + student.cls + ' ' +
+				student.addr + ' ' + student.phone + ' ')
+		return ''.join(students)
+	return 'error'
+
+#Android删除学生
+@app.route('/android/delete', methods=['POST'])
+def delete_student():
+	email = request.form['account']
+	#找到用户
+	user = User.query.filter_by(email=email).first()
+	#找到要删除的学生
+	student = Student.query.filter_by(stu_id=request.form['id'], user_id=user.id).first()
+	if student:
+		db.session.delete(student)
+		return 'ok'
+	return 'error'
+
+#Android修改或者新建学生
+@app.route('/android/change', methods=['POST'])
+def change_student():
+	#要修改的学生学号或者为空说明是新建学生
+	old_id = request.form['old_id']
+	email = request.form['account']
+	id = request.form['id']
+	name = request.form['name']
+	cls = request.form['cls']
+	addr = request.form['addr']
+	phone = request.form['phone']
+	#找到用户
+	user = User.query.filter_by(email=email).first()
+	if old_id != '':
+		#修改学生信息
+		student = Student.query.filter_by(stu_id=old_id, user_id=user.id).first();
+		if student:
+			student.stu_id = id
+			student.name = name
+			student.cls = cls
+			student.addr = addr
+			student.phone = phone
+			db.session.add(student)
+			return 'ok'
+		return 'error'
+	else:
+		#新增学生
+		#实例化学生
+		new_student = Student(stu_id=id, name=name, cls=cls, addr=addr, 
+			phone=phone, user_id=user.id)
+		db.session.add(new_student)
+		return 'ok'
+	return 'error'
+
+#android反馈活动处理
+@app.route('/android/feedback', methods=['POST'])
+def feedbakc():
+	message = request.form['message']
+	email = request.form['account']
+	sub = "反馈信息来自:" + email
+	send_mail('hust1446@gmail.com', sub, message)
+	return 'ok'
+
+
+#文件下载路由控制
+@app.route('/download/<path:filename>')
+def download(filename):
+	return send_from_directory('/usr/share/flasky', filename, as_attachment=True)
+
 
 #程序启动入口
 if __name__ == '__main__':
