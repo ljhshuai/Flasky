@@ -1,6 +1,6 @@
 # Flasky
 
-##基于flask的学生信息管理系统
+##基于flask的学生信息管理系统(相应的安卓版在Flasky_app库)
 
 ##主要用到：
 后端框架flask + 数据库管理sqlalchemy + 数据库sqlite + 前端bootstrap
