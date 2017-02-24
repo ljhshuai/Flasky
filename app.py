@@ -30,7 +30,7 @@ MAIL_SERVER = 'smtp.qq.com'	#邮件服务器
 MAIL_PORT = 465	#端口
 MAIL_USE_SSL = True		
 MAIL_USERNAME = '1312533774@qq.com'	#邮箱账号
-MAIL_PASSWORD = 'wodspmlyvxljhhia'	#邮箱密码
+MAIL_PASSWORD = 'your_password'	#邮箱密码
 
 #应用配置
 app.config.from_object(__name__)
