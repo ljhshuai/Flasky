@@ -20,6 +20,7 @@
 下载项目 -> 进入目录 -> 创建虚拟环境并激活 -> pip install -r requirements.txt -> python app.py runserver
 
 注：若需使用邮件功能则需更改app.py中邮箱相关配置
+
 再注：好像大家都不太会配置邮件服务，可以直接登录管理员账户：访问路径/admin，账户是huster1446@admin.com密码是huster1446
   
 ## 不足之处：
